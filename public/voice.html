@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Node.Falcon - Cockpit</title>
+	<link rel="icon" href="favicon.png">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link href="/js/bootstrap-css/bootstrap.min.css" rel="stylesheet">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body class="bg-secondary text-white">
+    <script src="js/socket.io.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-js/bootstrap.min.js"></script>
+	<script src="voice.js" type="text/javascript"></script>
+	<div class="loading"></div>
+	<div id="navigation" pagename="voiceCockpit"></div>
+	<div class="container-fluid">
+		<div class="row">
+      <div class="col-sm-9 center-ctrl-box bg-dark text-center" style="min-height:210px !important;min-width:210px !important;">
+        <h2>Centro de comandos</h2><br>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-3 divider">             
+              <center>
+                <h4>Comandos</h4>
+                <button id="takeoff" type="button" onmousedown="ena(1);main('takeoff');" class="btn btn-success btn-lg large">Descolagem</button>
+                <button id="land" disabled type="button" onmousedown="ena(0);main('land');" class="btn btn-warning btn-lg large">Aterragem</button>
+                <button id="hover" disabled type="button" onmousedown="main('hover');" class="btn btn-danger btn-lg large">Hover</button>
+                <button id="recover" disabled type="button" onmousedown="main('disableEmergency');" class="btn btn-warning btn-lg large">Recuperar</button>
+                <br><br>
+                <h5>Intensidade Movimentos</h5>
+                <div class="container">
+                  <input type="range" class="max-width" min="1" max="10" value="1" id="slider">
+                  <h6 id="intensidade"></h6>
+                  <script type="text/javascript">
+                    var slider = document.getElementById("slider");
+                    var output = document.getElementById("intensidade");
+                    output.innerHTML = 'Intensidade: '+slider.value;
+                    slider.oninput = function() {
+                      output.innerHTML = 'Intensidade: '+this.value;
+                    }
+                  </script>
+                 </div>
+              </center>
+            </div>
+            <div class="col-sm-6 divider"><center><h4>Microfone</h4><img src="micro_off.png" id="micro"><br><br><h4>Gramática</h4><select disabled id="grammars"></select></center><br></div>
+            <div class="col-sm-3 divider">
+              <h4>Serviços</h4>
+              <div id="getUserMedia" class="container divider max-width" style="background-color: red">
+                <h6>Microfone</h6>
+              </div>
+              <div id="pocketsphinx" class="container divider max-width" style="background-color: red">
+                <h6>API Microfone</h6>
+              </div>
+              <div id="grammar" class="container divider max-width" style="background-color: red">
+                <h6>Gramáticas</h6>
+              </div>
+              <br><br>
+              <h4>Reconhecimento</h4>
+              <div class="container divider max-width" style="background-color: blue">
+                <h6 id="reco"></h6>
+              </div>
+              <div class="container divider max-width" style="background-color: blue">
+                <h6 id="reco_word"></h6>
+              </div>
+            </div>
+            <div class="col-sm-12 divider" style="height:100px !important;">
+              <div class="alert alert-secondary" role="alert" style="height:100% !important;overflow-y: hidden;">
+                <p><strong>TEM EM ATENÇÃO ÀS MANOBRAS E TRUQUES DE QUE ESTE DRONE É CAPAZ</strong><br>Para o controlo é somente utilizada a língua Inglesa</p>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      <div class="col-sm-2 center-ctrl-box bg-dark text-center" style="float:right;min-width: 300px;">
+        <center>
+          <h2>Ações e Informação</h2>
+          <div id="flightLog" class="container divider" style="height:400px;overflow-y:scroll;"></div>
+        </center>
+      </div>
+  </div>
+  <div style="visibility:hidden;" id="output"></div>
+  <script>
+    function ena(obj){
+      if(obj==1){
+        document.getElementById('grammars').disabled=false;
+        document.getElementById('takeoff').disabled=true;
+        document.getElementById('land').disabled=false;
+        document.getElementById('hover').disabled=false;
+      }else if(obj==0){
+        document.getElementById('grammars').disabled=true;
+        document.getElementById('takeoff').disabled=false;
+        document.getElementById('land').disabled=true;
+        document.getElementById('hover').disabled=true;
+      }
+      
+    }
+    function scroll(){
+      var objDiv = document.getElementById("flightLog");
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    function audio(ctrl,obj){
+      if(ctrl=='play'){
+        var audio = new Audio(obj+'.wav');
+        audio.play();
+      }
+    }
+    function show(hyp){
+      audio('play','off');
+      document.getElementById("flightLog").innerHTML+=(hyp+"<br>");
+      stopRecording();
+      recognizerInfo('reco');
+      recognizerInfo('reco_word',hyp);
+    }
+    function recognizerInfo(obj,value){
+      if(obj=='reco'){
+        document.getElementById(obj).style.backgroundColor='green';
+        document.getElementById(obj).innerHTML="Reconhecido!";
+        setTimeout(function(){ document.getElementById(obj).style.backgroundColor='blue';
+        document.getElementById(obj).innerHTML="Aguarda microfone...";}, 2500);
+      }else if(obj=='reco_word'){
+        document.getElementById(obj).style.backgroundColor='green';
+        document.getElementById(obj).innerHTML="Palavra detetada: "+value;
+        setTimeout(function(){ document.getElementById(obj).style.backgroundColor='blue';
+        document.getElementById(obj).innerHTML="Palavra detetada: [aguardando]";}, 2500);
+      }
+    }
+  </script>
+    <script>
+      var recognizer, recorder, callbackManager, audioContext, outputContainer;
+      var isRecorderReady = isRecognizerReady = isRecording= false;
+      function postRecognizerJob(message, callback) {
+        var msg = message || {};
+        if (callbackManager) msg.callbackId = callbackManager.add(callback);
+        if (recognizer) recognizer.postMessage(msg);
+      };
+      function spawnWorker(workerURL, onReady) {
+          recognizer = new Worker(workerURL);
+          recognizer.onmessage = function(event) {
+            onReady(recognizer);
+          };
+          recognizer.postMessage({'pocketsphinx.wasm': '/js/pocketsphinx.wasm', 'pocketsphinx.js': '/js/pocketsphinx.js'});
+      };
+      function updateHyp(hyp) {
+        if (outputContainer) outputContainer.innerHTML = hyp;
+        if(hyp=="TAKEOFF"){
+          main("takeoff");
+          ena(1);
+          show(hyp);
+        }
+        else if(hyp=="LAND"){
+          main("land");
+          ena(0);
+          show(hyp);
+        }
+        else if(hyp=="TRIM"){
+          main("flat");
+          show(hyp);
+        }
+        else if(hyp=="MAGNET"){
+          main("calibrate");
+          show(hyp);
+        }
+        else if(hyp=="STOP"){
+          main("stop");
+          show(hyp);
+        }
+        else if(hyp=="LEFT"){
+          main("left");
+          show(hyp);
+        }
+        else if(hyp=="RIGHT"){
+          main("right");
+          show(hyp);
+        }
+        else if(hyp=="BACK"){
+          main("back");
+          show(hyp);
+        }
+        else if(hyp=="FRONT"){
+          main("front");
+          show(hyp);
+        }
+        else if(hyp=="DOWN"){
+          main("down");
+          show(hyp);
+        }
+        else if(hyp=="UP"){
+          main("up");
+          show(hyp);
+        }
+        scroll();
+      };
+      function updateUI() {
+        if (isRecorderReady && isRecognizerReady) document.getElementById('micro').disabled =  false;
+        document.getElementById('pocketsphinx').style.backgroundColor='green';
+      };
+      function displayRecording(display) {
+        if (display) document.getElementById('micro').src="micro_on.png";
+        else document.getElementById('micro').src="micro_off.png";
+      };
+      function startUserMedia(stream) {
+        var input = audioContext.createMediaStreamSource(stream);
+        window.firefox_audio_hack = input; 
+        var audioRecorderConfig = {errorCallback: function(x) {console.log("[Erro de captura: " + x+"]");}};
+        recorder = new AudioRecorder(input, audioRecorderConfig);
+        if (recognizer) recorder.consumers = [recognizer];
+        isRecorderReady = true;
+        updateUI();
+      };
+      function startRecording() {
+        audio('play','on');
+        var id = document.getElementById('grammars').value;
+        if (recorder && recorder.start(id)){
+          displayRecording(true);
+          isRecording=true;
+        }
+      };
+      function stopRecording() {
+        recorder && recorder.stop();
+        displayRecording(false);
+        isRecording=false;
+      };
+      var recognizerReady = function() {
+           updateGrammars();
+           isRecognizerReady = true;
+           updateUI();
+      };
+      var updateGrammars = function() {
+        var selectTag = document.getElementById('grammars');
+        for (var i = 0 ; i < grammarIds.length ; i++) {
+            var newElt = document.createElement('option');
+            newElt.value=grammarIds[i].id;
+            newElt.innerHTML = grammarIds[i].title;
+            selectTag.appendChild(newElt);
+        }
+        document.getElementById('grammar').style.backgroundColor='green';                          
+      };
+      var feedGrammar = function(g, index, id) {
+        if (id && (grammarIds.length > 0)) grammarIds[0].id = id.id;
+        if (index < g.length) {
+          grammarIds.unshift({title: g[index].title});
+          postRecognizerJob({command: 'addGrammar', data: g[index].g},
+                              function(id) {feedGrammar(grammars, index + 1, {id:id});});
+        } else {
+          grammarIds.push({"id":0, "title": "Keyword spotting"});
+          recognizerReady();
+        }
+      };
+      var feedWords = function(words) {
+           postRecognizerJob({command: 'addWords', data: words},function() {feedGrammar(grammars, 0);});
+      };
+      var initRecognizer = function() {
+          postRecognizerJob({command: 'initialize', data: [["-kws", "kws.txt"], ["-dict","kws.dict"]]},function() {if (recorder) recorder.consumers = [recognizer];feedWords(wordList);});
+      };
+      window.onload = function() {
+        outputContainer = document.getElementById("output");
+        console.log("[Esperando pela autorização]");
+        callbackManager = new CallbackManager();
+        spawnWorker("js/recognizer.js", function(worker) {
+            worker.onmessage = function(e) {
+                if (e.data.hasOwnProperty('id')) {
+                  var clb = callbackManager.get(e.data['id']);
+                  var data = {};
+                  if ( e.data.hasOwnProperty('data')) data = e.data.data;
+                  if(clb) clb(data);
+                }
+                if (e.data.hasOwnProperty('hyp')) {
+                  var newHyp = e.data.hyp;
+                  //if (e.data.hasOwnProperty('final') &&  e.data.final) newHyp = "Final: " + newHyp;
+                  updateHyp(newHyp);
+                }
+                if (e.data.hasOwnProperty('status') && (e.data.status == "error")) {
+                  console.log("[Erro em: " + e.data.command + ", com o código: " + e.data.code+"]");
+                }
+                $.wait = function( callback, seconds){
+                    return window.setTimeout(callback, seconds * 100 );
+                }
+                $.get("navigation.html",function(data){
+                    $("#navigation").html(data);
+                    var temp=$("#navigation").attr('pagename');
+                    if(temp!=''){
+                        document.getElementById("nav_"+temp).classList.add('active');
+                    }
+                    $.wait( function(){ $('.loading').fadeOut() }, 3);
+                });
+            };
+            postRecognizerJob({command: 'lazyLoad',data: {folders: [], files: [["/", "kws.txt", "../kws.txt"],["/", "kws.dict", "../kws.dict"]]}}, initRecognizer);
+            document.getElementById('getUserMedia').style.backgroundColor='green';
+        });
+        try {
+          window.AudioContext = window.AudioContext || window.webkitAudioContext;
+          window.URL = window.URL || window.webkitURL;
+          audioContext = new AudioContext();
+        } catch (e) {
+          document.getElementById('getUserMedia').style.backgroundColor='red';
+        }
+        if (navigator.mediaDevices.getUserMedia) navigator.mediaDevices.getUserMedia({audio: true}).then(startUserMedia).catch(function(e) {document.getElementById('getUserMedia').style.backgroundColor='green';});
+        else document.getElementById('getUserMedia').style.backgroundColor='red';
+      var startBtn = document.getElementById('micro');
+      document.getElementById('pocketsphinx').style.backgroundColor='green';
+      startBtn.disabled = true;
+      document.getElementById("reco").innerHTML="Aguarda microfone...";
+      document.getElementById("reco_word").innerHTML="Palavra detetada: [aguardando]";
+      startBtn.onclick= function(){
+        if(isRecording==false) startRecording();
+        else stopRecording();
+      }
+      };
+      // This follows the CMU dictionary format
+      var wordList = [["TAKEOFF","T EY K AO F"],["LAND","L AE N D"],["TRIM","T R IH M"],["MAGNET","M AE G N AH T"],["LEFT","L EH F T"],["RIGHT","R AY T"],["FRONT","F R AH N T"],["BACK","B AE K"],["UP","AH P"],["DOWN","D AW N"],["STOP","S T AA P"]];
+      var grammarFlight = {numStates: 1, start: 0, end: 6, transitions: [{from: 0, to: 0, word: "TAKEOFF"},{from: 0, to: 0, word: "LAND"},{from: 0, to: 0, word: "TRIM"},{from: 0, to: 0, word: "STOP"}]};
+      var grammarCalibrate = {numStates: 1, start: 0, end: 6, transitions: [{from: 0, to: 0, word: "MAGNET"}]};
+      var grammarMovement = {numStates: 1, start: 0, end: 6, transitions: [{from: 0, to: 0, word: "LEFT"},{from: 0, to: 0, word: "RIGHT"},{from: 0, to: 0, word: "FRONT"},{from: 0, to: 0, word: "BACK"}]};
+      var grammarSpecial = {numStates: 1, start: 0, end: 6, transitions: [{from: 0, to: 0, word: "UP"},{from: 0, to: 0, word: "DOWN"}]};
+      var grammars = [{title: "Movimentos Especiais", g: grammarSpecial},{title: "Movimentos Transversais/Longitudinais", g: grammarMovement},{title: "Calibragem de sensores", g: grammarCalibrate},{title: "Movimentos Principais", g: grammarFlight}];
+      var grammarIds = [];
+    </script>
+    <script src="js/audioRecorder.js"></script>
+    <script src="js/callbackManager.js"></script>
+</body>
+</html>

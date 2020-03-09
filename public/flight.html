@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Node.Falcon - Cockpit</title>
+	<link rel="icon" href="favicon.png">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link href="/js/bootstrap-css/bootstrap.min.css" rel="stylesheet">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body class="bg-secondary text-white">
+    <script src="js/socket.io.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-js/bootstrap.min.js"></script>
+    <script src="js/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
+	<script src="main.js" type="text/javascript"></script>
+	<script src="navigation.js" type="text/javascript"></script>
+	<div id="navigation" pagename="cockpit"></div>
+	<div class="loading"></div>
+	<div class="container-fluid">
+		<div class="row">
+			<div id="left-panel" class="container col-sm-3 center-ctrl-box bg-dark text-center">
+				<h6>Controlo Principal</h6>
+				<div class="container divider">
+					<div class="btn-group btn-group max-width">
+						<button id="takeoff" type="button" onmousedown="main('takeoff');flight(1);" class="btn btn-success">Descolagem</button>
+						<button id="land" disabled type="button" onmousedown="main('land');flight(0);" class="btn btn-warning">Aterragem</button>
+					</div>
+				</div>
+				<div class="container divider">
+					<div class="btn-group btn-group max-width">
+						<button id="hover" disabled type="button" onmousedown="main('hover');" class="btn btn-danger">Hover</button>
+						<button id="recover" disabled type="button" onmousedown="main('disableEmergency');" class="btn btn-warning">Recuperar</button>
+					</div>
+				</div>
+				<h6>Controlo Longitudinal</h6>
+				<div class="container divider">
+					<div class="btn-group btn-group max-width">
+						<button id="front" disabled type="button" onmousedown="main('front');" class="btn btn-primary max-width">Frente</button>
+						<button id="back" disabled type="button" onmousedown="main('back');" class="btn btn-primary max-width">Trás</button>
+					</div>
+				</div>
+				<h6>Controlo Transversal</h6>
+				<div class="container divider">
+					<div class="btn-group btn-group max-width">
+						<button id="left" disabled type="button" onmousedown="main('left');" class="btn btn-primary max-width">Esquerda</button>
+						<button id="right" disabled type="button" onmousedown="main('right');" class="btn btn-primary max-width">Direita</button>
+					</div>
+				</div>
+				<h6>Controlo Altura</h6>
+				<div class="container divider">
+					<div class="btn-group btn-group max-width">
+						<button id="up" disabled type="button" onmousedown="main('up');" class="btn btn-primary max-width">Cima</button>
+						<button id="down" disabled type="button" onmousedown="main('down');" class="btn btn-primary max-width">Baixo</button>
+					</div>
+				</div>
+				<h6>Controlo Rotação</h6>
+				<div class="container divider">
+					<div class="btn-group btn-group max-width">
+						<button id="cCW" disabled type="button" onmousedown="main('cCW');" class="btn btn-primary max-width">Rodar Esquerda</button>
+						<button id="CW" disabled type="button" onmousedown="main('CW');" class="btn btn-primary max-width">Rodar Direita</button>
+					</div>
+				</div>
+				<h6>Controlo Câmaras</h6>
+				<div class="container divider">
+					<div class="btn-group btn-group max-width">
+						<button type="button" onmousedown="main('camera0');" class="btn btn-primary max-width">Câmara Frontal</button>
+						<button type="button" onmousedown="main('camera3');" class="btn btn-primary max-width">Câmara Baixo</button>
+					</div>
+				</div>
+			</div>
+			<div id="center-panel" class="center-ctrl-box container col-sm-5 bg-dark text-center">
+				<div id="placeholder" style="height:75%;width:100%;"></div>
+				<script>new NodecopterStream(document.getElementById("placeholder"), {port: 3001});</script>
+				<br>
+				<div class="row">
+					<div id="esq" class="container divider col-sm-5">
+						<div class="container divider info">
+							<h6 id="frontBackDegrees"></h6>
+						</div>
+						<div class="container divider info">
+							<h6 id="leftRightDegrees"></h6>
+						</div>
+					</div>
+					<div id="dir" class="container divider col-sm-5">
+						<div class="container divider info">
+							<h6 id="altitudeMeters"></h6>
+						</div>
+						<div class="container divider info">
+							<h6 id="clockwiseDegrees"></h6>
+						</div>
+					</div>	
+				</div>
+				<div class="row" style="margin-top: 3px;">
+					<div id="sad" class="container divider col-sm-3 bg-dark">
+						<div class="btn-group btn-group max-width">
+							<button id="tra" onclick="transform();" class="btn btn-primary btn-sm"><span id="cpk">Expandir</span></button>
+						</div>
+						<script>
+							var show=1;
+							var hehe="";
+							function transform(){
+								if(show==1){
+									console.log('change');
+									document.getElementById('left-panel').style.display='none';
+									document.getElementById('right-panel').style.display='none';
+									document.getElementById('center-panel').classList.remove('col-sm-5');
+									document.getElementById('esq').classList.remove('col-sm-5');
+									document.getElementById('dir').classList.remove('col-sm-5');
+									document.getElementById('sad').classList.remove('col-sm-3');
+									document.getElementById('center-panel').style.width="1024px";
+									document.getElementById('center-panel').style.height="520px";
+									document.getElementById('esq').classList.add('col-sm-3');
+									document.getElementById('dir').classList.add('col-sm-3');
+									document.getElementById('sad').classList.add('col-sm-2');
+									document.getElementById('cpk').innerHTML="Reverter";
+									show=0;
+								}else if(show==0){
+									document.getElementById('left-panel').style.display='block';
+									document.getElementById('right-panel').style.display='block';
+									document.getElementById('esq').classList.remove('col-sm-3');
+									document.getElementById('dir').classList.remove('col-sm-3');
+									document.getElementById('sad').classList.remove('col-sm-2');
+									document.getElementById('center-panel').classList.add('col-sm-5');
+									document.getElementById('esq').classList.add('col-sm-5');
+									document.getElementById('dir').classList.add('col-sm-5');
+									document.getElementById('sad').classList.add('col-sm-3');
+									document.getElementById('cpk').innerHTML="Expandir";
+									show=1;
+								}
+							}
+						</script>
+					</div>
+				</div>
+			</div>
+			<div id="right-panel" class="container col-sm-3 bg-dark center-ctrl-box text-center">
+				<h6>Controlo Secundário</h6>
+				<div class="container divider">
+					<div class="gimme-space btn-group btn-group max-width">
+						<select disabled class="form-control" id="tricks">
+							<option value="flipAhead">Front Flip</option>
+							<option value="flipBehind">Back Flip</option>
+							<option value="flipLeft">Left Flip</option>
+							<option value="flipRight">Right Flip</option>
+							<option value="wave">Onda</option>
+							<option value="yawShake">Shake It</option>
+							<option value="yawDance">Dançar</option>
+							<option value="turnaround">De Castigo</option>
+						</select>
+						<button id="trick" disabled type="button" onmousedown="main('trick',document.getElementById('tricks').value);" class="btn btn-primary max-width">Executar</button>
+					</div>
+				</div>
+				<div class="container divider">
+					<button id="calibrate" disabled type="button" onmousedown="main('calibrate');" class="btn btn-sm btn-primary max-width">Calibrar Magnetometer</button>
+				</div>
+				<div class="container divider">
+					<button id="flat" type="button" onmousedown="main('flat');" class="btn btn-sm btn-primary max-width">Calibar Gyroscope</button>
+				</div>
+				<h6>Controlo Intensidade</h6>
+				<div class="container divider">
+					<input type="range" disabled class="max-width" min="1" max="10" value="1" id="slider">
+					<h6 id="intensidade"></h6>
+					<script type="text/javascript">
+						var slider = document.getElementById("slider");
+						var output = document.getElementById("intensidade");
+						output.innerHTML = 'Intensidade: '+slider.value;
+						slider.oninput = function() {
+							output.innerHTML = 'Intensidade: '+this.value;
+						}
+					</script>
+				</div>
+				<h6>Luzes de Informação</h6>
+				<div class="container divider">
+					<div id="lowBattery" class="container divider">
+						<h6 id="batteryPercentage"></h6>
+					</div>
+					<div id="MagnometerNeedsCalibration" class="container divider">
+						<h6>Calibrado</h6>
+					</div>
+					<div id="tooMuchWind" class="container divider">
+						<h6>Instabilidade</h6>
+					</div>
+					<div id="visionEnabled" class="container divider">
+						<h6>Visão de altura</h6>
+					</div>
+				</div>
+				<div class="container divider">
+					<div id="cutoutDetected" class="container divider">
+						<h6>Corte de Execução</h6>
+					</div>
+					<div id="softwareFault" class="container divider">
+						<h6>Kernel Panic</h6>
+					</div>
+					<div id="ultrasonicSensorDeaf" class="container divider">
+						<h6>Magnetómetro</h6>
+					</div>
+					<div id="motorProblem" class="container divider">
+						<h6>Motores</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

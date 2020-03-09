@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Node.Falcon - Informação</title>
+	<link rel="icon" href="favicon.png">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link href="/js/bootstrap-css/bootstrap.min.css" rel="stylesheet">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body class="bg-secondary text-white">
+    <script src="js/socket.io.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-js/bootstrap.min.js"></script>
+    <script src="js/nodecopter-client.js" type="text/javascript" charset="utf-8"></script>
+    <script src="navigation.js"></script>
+    <div class="loading"></div>
+    <div id="navigation" pagename="info"></div>
+	<div class="container-fluid">
+        <div class="container">
+            <center>
+               <br>
+               <h2>Consulta aqui toda a informação, em tempo real, acerca do teu drone!</h2>
+               <br>
+            </center>
+            
+        </div>
+		<table class="table table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Proveniência (NODE)</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Unidade</th>
+                <th scope="col">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="batteryRow">
+                <th scope="row">1</th>
+                <td>data.demo</td>
+                <td>Percentagem de Bateria</td>
+                <td>mAh (100% -> 1020mah)</td>
+                <b><td id="batteryPercentage"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>data.demo</td>
+                <td>Ângulo Frente/Trás</td>
+                <td>Degree</td>
+                <b><td id="frontBackDegrees"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>data.demo</td>
+                <td>Ângulo Esquerda/Direita</td>
+                <td>Degree</td>
+                <b><td id="leftRightDegrees"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>data.demo</td>
+                <td>Ângulo Rotação</td>
+                <td>Degree</td>
+                <b><td id="clockwiseDegrees"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>data.demo</td>
+                <td>Altitude</td>
+                <td>Metros</td>
+                <b><td id="altitudeMeters"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">6</th>
+                <td>data.demo</td>
+                <td>Estado de Controlo</td>
+                <td>Informação: <i>string</i></td>
+                <b><td id="controlState"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">7</th>
+                <td>data.demo</td>
+                <td>Estado de Voo</td>
+                <td>Informação: <i>string</i></td>
+                <b><td id="flyState"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">8</th>
+                <td>data.demo</td>
+                <td>Index de frames capturadas</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="frameIndex"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">9</th>
+                <td>data.droneState</td>
+                <td>Drone em voo</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="flying"></td></b>
+              </tr>
+              <tr id="videoRow">
+                <th scope="row">10</th>
+                <td>data.droneState</td>
+                <td>Vídeo ativado</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="videoEnabled"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">11</th>
+                <td>data.droneState</td>
+                <td>Algoritmo de controlo de altitude</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="altitudeControlAlgorithm"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">12</th>
+                <td>data.droneState</td>
+                <td>Problema dos motores</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="motorProblem"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">13</th>
+                <td>data.droneState</td>
+                <td>Problema de software / Kernel Panic</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="softwareFault"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">14</th>
+                <td>data.droneState</td>
+                <td>Magnetómetro precisa de calibragem</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="MagnometerNeedsCalibration"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">15</th>
+                <td>data.droneState</td>
+                <td>Demasiado Vento</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="tooMuchWind"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">16</th>
+                <td>data.droneState</td>
+                <td>Sensor de ultrassons com problema</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="ultrasonicSensorDeaf"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">17</th>
+                <td>data.droneState</td>
+                <td>Codec de vídeo</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="atCodecThreadOn"></td></b>
+              </tr>
+              <tr>
+                <th scope="row">18</th>
+                <td>data.droneState</td>
+                <td>Estado do programa de controlo do drone (Watchdog)</td>
+                <td>Informação: <i>int</i></td>
+                <b><td id="comWatchdogProblem"></td></b>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+    <script>
+        var socket = io.connect();
+        socket.on('info', function(data){
+            document.getElementById("batteryPercentage").innerHTML=data.demo["batteryPercentage"]+' %';
+            document.getElementById("frontBackDegrees").innerHTML=Math.round(data.demo["frontBackDegrees"]);
+            document.getElementById("leftRightDegrees").innerHTML=Math.round(data.demo["leftRightDegrees"]);
+            document.getElementById("clockwiseDegrees").innerHTML=Math.round(data.demo["clockwiseDegrees"]);
+            document.getElementById("altitudeMeters").innerHTML=Math.round(data.demo["altitudeMeters"]);
+            document.getElementById("controlState").innerHTML=data.demo["controlState"];
+            document.getElementById("flyState").innerHTML=data.demo["flyState"];
+            document.getElementById("frameIndex").innerHTML=data.demo["frameIndex"];
+            document.getElementById("flying").innerHTML=data.droneState["flying"];
+            document.getElementById("videoEnabled").innerHTML=data.droneState["videoEnabled"];
+            document.getElementById("altitudeControlAlgorithm").innerHTML=data.droneState["altitudeControlAlgorithm"];
+            document.getElementById("motorProblem").innerHTML=data.droneState["motorProblem"];
+            document.getElementById("softwareFault").innerHTML=data.droneState["softwareFault"];
+            document.getElementById("MagnometerNeedsCalibration").innerHTML=data.droneState["MagnometerNeedsCalibration"];
+            document.getElementById("tooMuchWind").innerHTML=data.droneState["tooMuchWind"];
+            document.getElementById("ultrasonicSensorDeaf").innerHTML=data.droneState["ultrasonicSensorDeaf"];
+            document.getElementById("atCodecThreadOn").innerHTML=data.droneState["atCodecThreadOn"];
+            document.getElementById("comWatchdogProblem").innerHTML=data.droneState["comWatchdogProblem"];
+        });
+    </script>
+</body>
+</html>

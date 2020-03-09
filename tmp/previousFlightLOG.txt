@@ -1,0 +1,27 @@
+<--> WARNING <--> |ACTION: Flat-Trim|
+|ACTION: TAKEOFF|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving RIGHT...By: 0.1|
+|ACTION: Moving BACK...By: 0.1|
+|ACTION: Moving RIGHT...By: 0.1|
+|ACTION: Moving BACK...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: HOVER|
+|ACTION: HOVER|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: Moving LEFT...By: 0.1|
+|ACTION: HOVER|
+|ACTION: Moving FRONT...By: 0.1|
+|ACTION: HOVER|
+<--> WARNING <--> |ACTION: Calibration|
+|ACTION: Moving FRONT...By: 0.1|
+|ACTION: Moving FRONT...By: 0.1|
+|ACTION: HOVER|
+|ACTION: LAND|
