@@ -1,8 +1,7 @@
 # ParrotAR-PC-Control / Node.Falcon
 ![Image of Drone](https://github.com/FrancesinhaMan/ParrotAR-PC-Control/blob/master/public/image2.png)
 
-### THIS PROJECT WON [PAPTICe](http://www.anpri.pt/pap/) SOFTWARE CONTEST
-### ALSO:uma iniciativa promovida pela Associação Nacional de Professores de Informática (ANPRI), que tem por objetivo reconhecer o trabalho desenvolvido no ensino profissional, valorizando a excelência, inovação, criatividade e emprendedorismo.
+### THIS PROJECT WON [PAPTICe](http://www.anpri.pt/pap/) SOFTWARE CONTEST, uma iniciativa promovida pela Associação Nacional de Professores de Informática (ANPRI), que tem por objetivo reconhecer o trabalho desenvolvido no ensino profissional, valorizando a excelência, inovação, criatividade e emprendedorismo.
 **It has finally arrived!**
 Control your Parrot **AR Drone 2.0** (or 1.0) using your PC
 
