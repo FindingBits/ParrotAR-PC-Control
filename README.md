@@ -7,6 +7,8 @@
 Control your Parrot **AR Drone 2.0** (or 1.0) using your PC
 * Original project name is **Node.Falcon** (Joined Node.js and the word Falcon)
 
+![Image of IO](https://travis-ci.org/FrancesinhaMan/ParrotAR-PC-Control.svg?branch=master)
+
 ## Features!
 * **Modern Design** Web Interface
   * Using HTML5 and Bootstrap 4
