@@ -76,6 +76,6 @@ Control your Parrot **AR Drone 2.0** (or 1.0) using your PC
 * JQuery
 
 # Special Thanks to creators of:
-* node-Dronestream @bkw
-* node-ar-drone @felixge
-* pocketsphinx.js @syl22-00
+* node-Dronestream [@bkw](https://github.com/bkw)
+* node-ar-drone [@felixge](https://github.com/felixge)
+* pocketsphinx.js [@syl22-00](https://github.com/syl22-00)
