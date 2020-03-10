@@ -3,7 +3,7 @@
 
 ### THIS PROJECT WON [PAPTICe](http://www.anpri.pt/pap/) SOFTWARE CONTEST
 
-**It has finally arrived complete!**
+**It has finally arrived!**
 Control your Parrot **AR Drone 2.0** (or 1.0) using your PC
 * Original project name is **Node.Falcon** (Joined Node.js and the word Falcon)
 
