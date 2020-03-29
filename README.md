@@ -2,12 +2,22 @@
 ![Image of Drone](https://github.com/FrancesinhaMan/ParrotAR-PC-Control/blob/master/public/image2.png)
 
 ### THIS PROJECT WON [PAPTICe](http://www.anpri.pt/pap/) SOFTWARE CONTEST, uma iniciativa promovida pela Associação Nacional de Professores de Informática (ANPRI), que tem por objetivo reconhecer o trabalho desenvolvido no ensino profissional, valorizando a excelência, inovação, criatividade e emprendedorismo.
+
+## Com muito orgulho nessa data trouxemos o primeiro e segundo lugar!
+![Image of IO](https://github.com/FrancesinhaMan/ParrotAR-PC-Control/blob/master/contest-2.PNG)
+[Pode ser consultado aqui](http://www.anpri.pt/pap/index.php/premiados-edicao-2019/)
+
+## Foto da preparação
+![Image of IO](https://github.com/FrancesinhaMan/ParrotAR-PC-Control/blob/master/contest-1.jpg)
+[Pode ser consultada aqui](http://www.anpri.pt/pap/index.php/fotografias/)
+
+## Description
 **It has finally arrived!**
 Control your Parrot **AR Drone 2.0** (or 1.0) using your PC
 
 * Original project name is **Node.Falcon** (Joined Node.js and the word Falcon)
 
-#### Currently non compatible with git-clone: 
+#### Currently non compatible with git-clone via command line: 
 ![Image of IO](https://travis-ci.org/FrancesinhaMan/ParrotAR-PC-Control.svg?branch=master)
 
 ## Features!
