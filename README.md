@@ -5,10 +5,12 @@
 
 ## Com muito orgulho nessa data trouxemos o primeiro e segundo lugar!
 ![Image of IO](https://github.com/FrancesinhaMan/ParrotAR-PC-Control/blob/master/contest-2.PNG)
+
 [Pode ser consultado aqui](http://www.anpri.pt/pap/index.php/premiados-edicao-2019/)
 
 ## Foto da preparação
 ![Image of IO](https://github.com/FrancesinhaMan/ParrotAR-PC-Control/blob/master/contest-1.jpg)
+
 [Pode ser consultada aqui](http://www.anpri.pt/pap/index.php/fotografias/)
 
 ## Description
