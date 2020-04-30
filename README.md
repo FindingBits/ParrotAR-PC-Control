@@ -67,11 +67,10 @@ Control your Parrot **AR Drone 2.0** (or 1.0) using your PC
 * **Node.js** installed in your machine
 * **A Smile!**
 
-## Instructions to work!
-1. Extract elements in **node_modules/node_modules.zip** in present directory (replace all)
-2. Connect to your Drone Wifi
-3. Run **run_me.bat** or open cmd in folder directory and type `node drone.js` and open a browser (Chrome Preferable) and go to `localhost:3000`
-4. Enjoy controlling your drone in a more advanced way!
+## Instructions to work! (3 EZ Steps)
+1. Connect to your Drone Wifi
+2. Run **run_me.bat** or open cmd in folder directory and type `node drone.js` and open a browser (Chrome Preferable) and go to `localhost:3000`
+3. Enjoy controlling your drone in a more advanced way!
 
 ## Voice instructions
 1. Allow Microphone in browser
